@@ -34,6 +34,5 @@ const connect = function () {
 };
 
 console.log("Connecting ...");
-connect();
 
 module.exports = connect;
