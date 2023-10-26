@@ -12,22 +12,21 @@ const setupInput = function (conn) {
 };
 
 const handleUserInput = function (key) {
-  console.log(key);
   if (key === '\u0003') {
     process.exit();
   }
-  if (key === "w") {
-    connection.write("Move: up");
-  }
-  if (key === "a") {
-    connection.write("Move: left");
-  }
-  if (key === "s") {
-    connection.write("Move: down");
-  }
-  if (key === "d") {
-    connection.write("Move: right");
-  }
+
+  const keyMap = {
+    "\u0077": "Move: up",
+    "\u0061": "Move: left",
+    "\u0073": "Move: down",
+    "\u0064": "Move: right",
+    "\u0071": "Say: IT'S ME DYLAN!",
+    "\u0065": "Say: I'M THE BEST!",
+    "\u0072": "Say: CAN'T CATCH ME!"
+  };
+
+  connection.write(keyMap[key]);
 };
 
 module.exports = setupInput;
