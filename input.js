@@ -1,3 +1,11 @@
+// require map of keys
+const { keyMap } = require('./constants');
+
+// to initialize and continue automatic snake movement
+const snakeMoves = {
+  isMoving: false,
+  currentDirection: undefined
+};
 let connection;
 
 // setup interface to handle user input from stdin
@@ -12,21 +20,38 @@ const setupInput = function (conn) {
 };
 
 const handleUserInput = function (key) {
+  // end process when user presses ctrl + c
   if (key === '\u0003') {
     process.exit();
   }
 
-  const keyMap = {
-    "\u0077": "Move: up",
-    "\u0061": "Move: left",
-    "\u0073": "Move: down",
-    "\u0064": "Move: right",
-    "\u0071": "Say: IT'S ME DYLAN!",
-    "\u0065": "Say: I'M THE BEST!",
-    "\u0072": "Say: CAN'T CATCH ME!"
-  };
+  // if pressed key exists in keyMap object
+  if (keyMap[key]) {
+    // regex to match keys "q", "e", or "r"
+    const regex = /[qer]/gi;
 
-  connection.write(keyMap[key]);
+    // write to server, sending pressed key
+    connection.write(keyMap[key]);
+    // if key is not one of the keys designated to send a chat message
+    if (regex.test(key) === false) {
+      // set the current direction of the snake for automatic movement
+      snakeMoves.currentDirection = keyMap[key];
+    }
+    
+    // if snake is formerly not moving, start automatic movement
+    if (!snakeMoves.isMoving) {
+      snakeMoves.isMoving = true;
+      moveAutomatically();
+    }
+  }
 };
+
+// automatically move the snake as soon as user presses a movement key
+const moveAutomatically = function () {
+  setInterval(() => {
+    connection.write(snakeMoves.currentDirection);
+  }, 500);
+};
+
 
 module.exports = setupInput;

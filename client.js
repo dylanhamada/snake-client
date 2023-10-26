@@ -22,6 +22,13 @@ const connect = function () {
     console.log(`Data received: ${data}`);
   });
 
+  // print error message, end connection, and end process
+  conn.on("error", (error) => {
+    console.log(`Error: ${error}`);
+    conn.destroy();
+    process.exit();
+  })
+
   return conn;
 };
 
